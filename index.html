@@ -30,17 +30,17 @@
           </div>
           <!---Caja que se muestra si existe el usuario---->
           <div class="container__form">
-              <p><strong>Nombre:</strong><span id="userName"></span></p>
-              <p><strong>Correo electronico:</strong><span id="userEmail"></span></p>
-              <!-- <label for="userName" class="form__label">Nombre</label> -->
-              <!-- <input type="text" id="userName" class="form__input" placeholder="Nombre del usuario..." aria-required="true"> -->
+            <p><strong>Nombre:</strong><span id="userName"></span></p>
+            <p><strong>Correo electronico:</strong><span id="userEmail"></span></p>
+            <!-- <label for="userName" class="form__label">Nombre</label> -->
+            <!-- <input type="text" id="userName" class="form__input" placeholder="Nombre del usuario..." aria-required="true"> -->
             <!---Correo del usuario--->
             <!-- <div class="form__group">
               <label for="userEmail" class="form__label">Correo electrónico</label>
               <input type="text" id="userEmail" class="form__input" placeholder="Correo del usuario..." aria-required="true">
             </div> -->
           </div>
-          
+
           <div class="error__message">
             <p>¡Upss, usuario no encontrado!</p>
           </div>
@@ -53,12 +53,12 @@
         <!-- Card2: Detalles de la Tarea -->
         <div class="card">
           <h2 class="card__title">Detalles de la Tarea</h2>
-            <div class="form__group">
+          <div class="form__group">
             <label for="taskName" class="form__label">Título de la tarea</label>
             <input type="text" id="taskName" class="form__input" placeholder="Ingresa el título de la tarea"
               aria-required="true">
-            <span class="form__error" id="taskNameError"></span>
-          </div> 
+            <span span class="form__error" id="taskNameError"></span>
+          </div>
 
           <div class="form__group">
             <label for="taskDescription" class="form__label">Descripción de la tarea</label>
@@ -66,14 +66,27 @@
               placeholder="Escribe la descripción de la tarea..." rows="4" aria-required="true"></textarea>
             <span class="form__error" id="taskDescriptionError"></span>
           </div>
-                    <!-- selector de estado de tareas -->
-          <div class="task__status"> 
-            <select name="select">
-              <option value="value1">Estado</option>
-              <option value="value2">Activa</option>
-              <option value="value3">Inactiva</option>
-            </select>
+
+          <div class="form__group--disposicion">
+            <div class="form__group">
+              <label for="taskStatus" class="form__label">Estado</label>
+              <select id="taskStatus" class="form__input">
+                <option value="Pendiente">Pendiente</option>
+                <option value="En progreso">En progreso</option>
+                <option value="Completado">Completada</option>
+              </select>
+            </div>
+
+            <div class="form__group">
+              <label for="taskPriority" class="form__label">Importancia</label>
+              <select id="taskPriority" class="form__input">
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+              </select>
+            </div>
           </div>
+
           <!---Boton de enviar---->
           <button type="submit" class="btn btn--primary" id="submitBtn">
             <span class="btn__text">Enviar</span>
