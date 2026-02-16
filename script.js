@@ -6,36 +6,44 @@
  * Objetivo: Aplicar conceptos del DOM para seleccionar elementos,
  * responder a eventos y crear nuevos elementos dinámicamente.
  * 
- * Autor: [Tu nombre aquí]
- * Fecha: [Fecha actual]
+ * Autores: 
+ * Luis Carlos Villamizar
+ * Julian Andres Diaz
+ * Carol Dayana Lizarazo
+ * Fecha: 11/02/2026
  * ============================================
  */
 
 // ============================================
-// 1. SELECCIÓN DE ELEMENTOS DEL DOM
+//                IMPORTACIONES
+// ============================================
+
+
+
+// ============================================
+//            CONSTANTES Y VARIABLES 
 // ============================================
 
 /**
  * Seleccionamos los elementos del DOM que necesitamos manipular.
  * Usamos getElementById para obtener referencias a los elementos únicos.
  */
-
 // Formulario
+
 const messageForm = document.getElementById('messageForm');
 
 // Campos de entrada
-const userNameInput = document.getElementById('userName');
-const userMessageInput = document.getElementById('userMessage');
+const userDocumentInput = document.getElementById('userDocument');
 
 // Botón de envío
 const submitBtn = document.getElementById('submitBtn');
 
 // Elementos para mostrar errores
-const userNameError = document.getElementById('userNameError');
-const userMessageError = document.getElementById('userMessageError');
+const errorMessage = document.getElementById('userDocumentError');
 
 // Contenedor donde se mostrarán los mensajes
-const messagesContainer = document.getElementById('messagesContainer');
+const userName = document.getElementById('userName');
+const userEmail = document.getElementById('userEmail');
 
 // Estado vacío (mensaje que se muestra cuando no hay mensajes)
 const emptyState = document.getElementById('emptyState');
@@ -46,9 +54,11 @@ const messageCount = document.getElementById('messageCount');
 // Variable para llevar el conteo de mensajes
 let totalMessages = 0;
 
+// Variable de puerto de la db
+const port = "http://localhost:3000/"
 
 // ============================================
-// 2. FUNCIONES AUXILIARES
+//            FUNCIONES Y METODOS
 // ============================================
 
 /**
@@ -58,8 +68,14 @@ let totalMessages = 0;
  */
 function isValidInput(value) {
     // TODO: Implementar validación
-    // Pista: usa trim() para eliminar espacios al inicio y final
     // Retorna true si después de trim() el string tiene longitud > 0
+    if(value.trim().length > 0)
+    {
+        return true
+    }
+    else {
+        return false
+    }
 }
 
 /**
@@ -69,7 +85,8 @@ function isValidInput(value) {
  */
 function showError(errorElement, message) {
     // TODO: Implementar función para mostrar error
-    // Pista: asigna el mensaje al textContent del elemento
+    errorElement.classList.add(`error`);
+    errorMessage.append(message);
 }
 
 /**
@@ -78,7 +95,8 @@ function showError(errorElement, message) {
  */
 function clearError(errorElement) {
     // TODO: Implementar función para limpiar error
-    // Pista: asigna un string vacío al textContent
+    errorElement.classList.remove(`error`);
+    errorMessage.textContent = "";
 }
 
 /**
@@ -98,7 +116,6 @@ function validateForm() {
     // 5. Retornar si el formulario es válido o no
     
     // Ejemplo de estructura:
-    /*
     const userName = userNameInput.value;
     const userMessage = userMessageInput.value;
     let isValid = true;
@@ -116,7 +133,6 @@ function validateForm() {
     // Validar mensaje (estructura similar)
     
     return isValid;
-    */
 }
 
 /**
@@ -174,11 +190,6 @@ function showEmptyState() {
     // Pista: Remueve la clase 'hidden' del elemento emptyState
 }
 
-
-// ============================================
-// 3. CREACIÓN DE ELEMENTOS
-// ============================================
-
 /**
  * Crea un nuevo elemento de mensaje en el DOM
  * @param {string} userName - Nombre del usuario
@@ -215,36 +226,42 @@ function createMessageElement(userName, message) {
     // PASO 6: Ocultar el estado vacío si está visible
 }
 
-
 // ============================================
-// 4. MANEJO DE EVENTOS
+//                  EVENTOS
 // ============================================
 
 /**
  * Maneja el evento de envío del formulario
  * @param {Event} event - Evento del formulario
  */
-function handleFormSubmit(event) {
-    // TODO: Implementar el manejador del evento submit
-    
-    // PASO 1: Prevenir el comportamiento por defecto del formulario
-    // Pista: event.preventDefault()
-    
-    // PASO 2: Validar el formulario
-    // Si no es válido, detener la ejecución (return)
-    
-    // PASO 3: Obtener los valores de los campos
-    
+function handleFormSubmit(event) {    
     // PASO 4: Crear el nuevo elemento de mensaje
     // Llamar a createMessageElement con los valores obtenidos
     
     // PASO 5: Limpiar el formulario
     // Pista: messageForm.reset()
     
-    // PASO 6: Limpiar los errores
+    
     
     // PASO 7: Opcional - Enfocar el primer campo para facilitar agregar otro mensaje
     // Pista: userNameInput.focus()
+
+    // PASO 1: Prevenir el comportamiento por defecto del formulario
+    // Pista: event.preventDefault()
+    event.preventDefault();
+    // PASO 2: Validar el formulario
+    // Si no es válido, detener la ejecución (return)
+    if(isValidInput(userDocumentInput.value)){
+        // PASO 3: Obtener los valores de los campos
+
+        // PASO 6: Limpiar los errores
+        clearError(userDocumentInput);
+    }
+    else{
+
+        showError(userDocumentInput, "El Campo No Puede Estar Vacio");
+        return;
+    }
 }
 
 /**
@@ -255,11 +272,6 @@ function handleInputChange() {
     // Esta función se ejecuta cuando el usuario escribe en un campo
     // Debe limpiar el error de ese campo específico
 }
-
-
-// ============================================
-// 5. REGISTRO DE EVENTOS
-// ============================================
 
 /**
  * Aquí registramos todos los event listeners
@@ -312,6 +324,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Por ejemplo, cargar mensajes guardados del localStorage
 });
 
+messageForm.addEventListener(`submit`, (evento)=>{
+    handleFormSubmit(evento);
+})
 
 // ============================================
 // 8. FUNCIONALIDADES ADICIONALES (BONUS)
@@ -329,3 +344,4 @@ document.addEventListener('DOMContentLoaded', function() {
  * 7. Agregar emojis o reacciones a los mensajes
  * 8. Implementar búsqueda/filtrado de mensajes
  */
+
