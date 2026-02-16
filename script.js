@@ -30,7 +30,7 @@
  */
 // Formulario
 
-const messageForm = document.getElementById('messageForm');
+const messageForm = document.getElementById('documentForm');
 
 // Campos de entrada
 const userDocumentInput = document.getElementById('userDocument');
@@ -84,9 +84,14 @@ function isValidInput(value) {
  * @param {string} message - Mensaje de error a mostrar
  */
 function showError(errorElement, message) {
+    errorMessage.textContent = "";
     // TODO: Implementar función para mostrar error
     errorElement.classList.add(`error`);
-    errorMessage.append(message);
+    console.log(errorElement);
+    if(errorElement.id == "userDocument")
+    {
+        errorMessage.append(message);
+    }
 }
 
 /**
@@ -117,7 +122,6 @@ function validateForm() {
     
     // Ejemplo de estructura:
     const userName = userNameInput.value;
-    const userMessage = userMessageInput.value;
     let isValid = true;
     
     // Validar nombre
@@ -234,7 +238,7 @@ function createMessageElement(userName, message) {
  * Maneja el evento de envío del formulario
  * @param {Event} event - Evento del formulario
  */
-function handleFormSubmit(event) {    
+function handleFormSubmit(event, ) {    
     // PASO 4: Crear el nuevo elemento de mensaje
     // Llamar a createMessageElement con los valores obtenidos
     
@@ -318,7 +322,7 @@ function handleInputChange() {
  */
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ DOM completamente cargado');
-    console.log('📝 Aplicación de registro de mensajes iniciada');
+    console.log('📝 Aplicación de registro de tareas iniciada');
     
     // Aquí puedes agregar cualquier inicialización adicional
     // Por ejemplo, cargar mensajes guardados del localStorage
