@@ -240,6 +240,16 @@ body {
     font-weight: var(--font-weight-medium);
 }
 
+.container__form{
+  border-radius: var(--radius-lg);
+  border-left: solid var(--color-primary) 5px;
+  padding: var(--spacing-md);
+  background-color: var(--color-primary-lighter);
+  
+}
+.container__form p{
+  margin-bottom: var(--spacing-md); /* 16px de separación */
+}
 /* ============================================
    BOTONES
    ============================================ */
@@ -293,9 +303,7 @@ body {
     box-shadow: 0 0 0 3px var(--color-primary-lighter);
 }
 
-.btn__icon {
-    font-size: var(--font-size-lg);
-}
+
 
 /* ============================================
    SECCIÓN DE MENSAJES

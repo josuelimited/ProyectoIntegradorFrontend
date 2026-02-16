@@ -28,25 +28,25 @@
             <input type="text" id="userDocument" class="form__input" placeholder="Ingresa tu documento de identidad"
               aria-required="true">
           </div>
-          <!---Nombre del usuario---->
-          <div class="form__group">
-            <label for="userName" class="form__label">Nombre</label>
-            <input type="text" id="userName" class="form__input" placeholder="Nombre del usuario..."
-              aria-required="true">
+          <!---Caja que se muestra si existe el usuario---->
+          <div class="container__form">
+              <p><strong>Nombre:</strong><span id="userName"></span></p>
+              <p><strong>Correo electronico:</strong><span id="userEmail"></span></p>
+              <!-- <label for="userName" class="form__label">Nombre</label> -->
+              <!-- <input type="text" id="userName" class="form__input" placeholder="Nombre del usuario..." aria-required="true"> -->
+            <!---Correo del usuario--->
+            <!-- <div class="form__group">
+              <label for="userEmail" class="form__label">Correo electrónico</label>
+              <input type="text" id="userEmail" class="form__input" placeholder="Correo del usuario..." aria-required="true">
+            </div> -->
           </div>
-          <!---Correo del usuario--->
-          <div class="form__group">
-            <label for="userEmail" class="form__label">Correo electrónico</label>
-            <input type="text" id="userEmail" class="form__input" placeholder="Correo del usuario..." aria-required="true">
-          </div>
-
+          
           <div class="error__message">
             <p>¡Upss, usuario no encontrado!</p>
           </div>
           <!---Boton de enviar---->
           <button type="submit" class="btn btn--primary" id="submitBtn">
             <span class="btn__text">Enviar</span>
-            <span class="btn__icon">➤</span>
           </button>
         </div>
 
@@ -77,7 +77,6 @@
           <!---Boton de enviar---->
           <button type="submit" class="btn btn--primary" id="submitBtn">
             <span class="btn__text">Enviar</span>
-            <span class="btn__icon">➤</span>
           </button>
         </div>
       </form>
