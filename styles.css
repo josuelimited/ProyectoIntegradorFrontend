@@ -316,8 +316,10 @@ body {
    SECCIÓN DE MENSAJES
    ============================================ */
 .error__message{                /*Error que sale cuando el usuario no se encuentra */
+  display: block;
   color: var(--color-error);
-  text-align: var(--text-aling-center);
+  text-align: center;
+  margin-top: var(--spacing-md);
 }
 .messages-section {
     margin-bottom: var(--spacing-2xl);
