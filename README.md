@@ -7,6 +7,7 @@
 | **Julián Andrés Diaz Chaparro** | Product Owner |
 | **Luis Carlos Villamizar Sanchez** | Backend |
 | **Carol Dayana Lizarazo Colmenares** | Frontend |
+| **Josue Chaparro Oviedo** | Frontend |
 
 ---
 
