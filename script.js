@@ -3,6 +3,9 @@
  *                Importaciones
  * ============================================
 */
+import { crearCardTarea } from './components/tareas.js';
+import { getTareas } from './use-case/tareas/getTareas.js';
+import { postTarea } from './use-case/tareas/postTareas.js';
 
 
 /**
@@ -12,7 +15,7 @@
  */
 
 // selección de elementos del dom
-const searchForm = document.getElementById('searchForm'); 
+const searchForm = document.getElementById('searchForm');
 const taskForm = document.getElementById('taskForm');
 
 // campos de entrada (actualizados según el nuevo html)
@@ -26,7 +29,7 @@ const taskPriorityInput = document.getElementById('taskPriority');
 const searchError = document.getElementById('searchError');
 const userInfoSection = document.getElementById('userInfo');
 const taskSection = document.getElementById('taskSection');
-const taskTableBody = document.getElementById('taskTableBody');
+const tasksContainer = document.getElementById('tasksContainer');
 const taskCountLabel = document.getElementById('taskCount');
 const emptyTasksState = document.getElementById('emptyTasks');
 
@@ -46,8 +49,7 @@ const api_url = "http://localhost:3001";
  */
 function isValidInput(value) {
     // retorna true si después de trim() el string tiene longitud > 0
-    if(value.trim().length > 0)
-    {
+    if (value.trim().length > 0) {
         return true
     }
     else {
@@ -61,10 +63,9 @@ function isValidInput(value) {
 function showError(errorElement, message) {
     errorElement.textContent = "";
     errorElement.classList.add(`error`);
-    
+
     // validación según el id del elemento de error del buscador
-    if(errorElement.id == "searchError")
-    {
+    if (errorElement.id == "searchError") {
         errorElement.append(message);
     } else {
         errorElement.textContent = message;
@@ -90,21 +91,21 @@ function validateForm() {
     const title = taskTitleInput.value;
     const desc = taskDescInput.value;
     let isValid = true;
-    
+
     if (!isValidInput(title)) {
         taskTitleInput.classList.add('error');
         isValid = false;
     } else {
         taskTitleInput.classList.remove('error');
     }
-    
+
     if (!isValidInput(desc)) {
         taskDescInput.classList.add('error');
         isValid = false;
     } else {
         taskDescInput.classList.remove('error');
     }
-    
+
     return isValid;
 }
 
@@ -114,9 +115,9 @@ function validateForm() {
  */
 function getCurrentTimestamp() {
     const now = new Date();
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
+    const options = {
+        year: 'numeric',
+        month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit'
@@ -147,9 +148,43 @@ function getInitials(name) {
  * actualiza el contador de mensajes
  */
 function updateMessageCount() {
-    // todo: implementar actualización del contador
-    // pista: usa template literals para crear el texto
     taskCountLabel.textContent = `${totalTasks} ${totalTasks === 1 ? 'tarea' : 'tareas'}`;
+}
+
+/**
+ * Limpia el contenedor de cards y reinicia el contador
+ */
+function limpiarTareas() {
+    // Eliminar todas las cards pero dejar el estado vacío intacto
+    const cards = tasksContainer.querySelectorAll('.task-card');
+    cards.forEach(card => card.remove());
+    totalTasks = 0;
+    updateMessageCount();
+    showEmptyState();
+}
+
+/**
+ * Carga y renderiza las tareas existentes de un usuario
+ * @param {string} userId - ID del usuario buscado
+ */
+async function renderTareasUsuario(userId) {
+    console.log('Buscando tareas para userId:', userId);
+    const tareas = await getTareas(userId);
+    console.log('Tareas recibidas:', tareas);
+
+    if (tareas.length === 0) {
+        showEmptyState();
+        return;
+    }
+
+    tareas.forEach(tarea => {
+        const card = crearCardTarea(tarea);
+        tasksContainer.insertBefore(card, emptyTasksState);
+        totalTasks++;
+    });
+
+    updateMessageCount();
+    hideEmptyState();
 }
 
 /**
@@ -179,28 +214,20 @@ function showEmptyState() {
  * @param {string} userName - nombre del usuario
  * @param {string} message - contenido del mensaje
  */
-function createMessageElement(userName, message) { 
-    // paso 1: crear el contenedor principal (en este caso una fila de tabla)
-    const row = document.createElement('tr');
-    // paso 2: crear la estructura html (adaptada a la tabla del nuevo html)
-    const title = taskTitleInput.value;
-    const desc = taskDescInput.value;
-    const priority = taskPriorityInput.value;
-    const status = taskStatusInput.value;
-    const priorityClass = priority.toLowerCase();
-    row.innerHTML = `
-        <td><strong>${title}</strong></td>
-        <td>${desc}</td>
-        <td><span class="priority-tag ${priorityClass}">${priority}</span></td>
-        <td>${status}</td>
-    `;
-    // paso 3: insertar el nuevo elemento en el contenedor
-    taskTableBody.insertBefore(row, taskTableBody.firstChild);
-    // paso 4: incrementar el contador
+function createMessageElement(tarea) {
+    // paso 1: usar el componente para crear la card dinámica
+    const card = crearCardTarea(tarea);
+
+    // paso 2: insertar la card al inicio del contenedor
+    tasksContainer.insertBefore(card, emptyTasksState);
+
+    // paso 3: incrementar el contador
     totalTasks++;
-    // paso 5: actualizar el contador visual
+
+    // paso 4: actualizar el contador visual
     updateMessageCount();
-    // paso 6: ocultar el estado vacío
+
+    // paso 5: ocultar el estado vacío
     hideEmptyState();
 }
 
@@ -214,15 +241,15 @@ function createMessageElement(userName, message) {
 async function handleSearchSubmit(event) {
     // prevenir comportamiento por defecto
     event.preventDefault();
-    
+
     // obtener valor del documento
     const docValue = userDocInput.value;
 
-    if(isValidInput(docValue)) {
+    if (isValidInput(docValue)) {
         try {
             // realizar peticion al puerto 3000
             const response = await fetch(`${api_url}/users/${docValue}`);
-            
+
             if (!response.ok) {
                 throw new Error("usuario no encontrado");
             }
@@ -231,18 +258,22 @@ async function handleSearchSubmit(event) {
 
             // guardar usuario en el estado global
             currentUser = user;
-            
+
             // actualizar interfaz con los datos del json
             document.getElementById('infoNombre').textContent = user.nombre_completo;
             document.getElementById('infoCorreo').textContent = user.correo;
-            
+
             // mostrar secciones de tareas y usuario
             userInfoSection.classList.remove('hidden');
             taskSection.classList.remove('hidden');
-            
+
             // limpiar errores previos
             clearError(searchError);
-            
+
+            // limpiar cards anteriores y cargar tareas del usuario encontrado
+            limpiarTareas();
+            await renderTareasUsuario(docValue.trim());
+
             console.log('usuario cargado correctamente');
 
         } catch (error) {
@@ -261,12 +292,12 @@ async function handleSearchSubmit(event) {
  * maneja el evento de envío del formulario de tareas
  * @param {Event} event - evento del formulario
  */
-async function handleFormSubmit(event) {    
+async function handleFormSubmit(event) {
     // paso 1: prevenir el comportamiento por defecto del formulario
     event.preventDefault();
 
     // paso 2: validar el formulario
-    if(validateForm()) {
+    if (validateForm()) {
         // paso 3: obtener los valores de los campos
         const title = taskTitleInput.value;
         const desc = taskDescInput.value;
@@ -283,30 +314,18 @@ async function handleFormSubmit(event) {
             fecha_registro: getCurrentTimestamp()
         };
 
-        try {
-            // persistir en db.json a través de la api
-            const response = await fetch(`${api_url}/tasks`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTask)
-            });
+        // usar el use-case para persistir en el servidor
+        const tareaCreada = await postTarea(newTask);
 
-            if(response.ok) {
-                // paso 4: crear el nuevo elemento de mensaje (fila de tabla)
-                createMessageElement(currentUser.nombre_completo, title);
-                
-                // paso 5: limpiar el formulario
-                taskForm.reset();
-                
-                // paso 6: limpiar los errores
-                clearError(document.getElementById('taskNameError')); // si existen los spans
-                clearError(document.getElementById('taskDescriptionError'));
+        if (tareaCreada) {
+            // crear la card dinámica con los datos de la tarea
+            createMessageElement(tareaCreada);
 
-                // paso 7: opcional - enfocar el primer campo
-                taskTitleInput.focus();
-            }
-        } catch (error) {
-            console.error("error al guardar en el servidor");
+            // limpiar el formulario
+            taskForm.reset();
+
+            // enfocar el primer campo
+            taskTitleInput.focus();
         }
     }
 }
@@ -317,10 +336,10 @@ async function handleFormSubmit(event) {
 function handleInputChange(event) {
     // todo: implementar limpieza de errores al escribir
     const target = event.target;
-    
+
     // remover clase de error visual
     target.classList.remove('error');
-    
+
     // si es el buscador, limpiar el span de error especifico
     if (target.id === "userDoc") {
         clearError(searchError);
@@ -328,9 +347,9 @@ function handleInputChange(event) {
 }
 
 // registro de event listeners
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log(' dom completamente cargado y eventos vinculados');
-    
+
     // registrar el evento 'submit' en el buscador de usuario
     searchForm.addEventListener('submit', handleSearchSubmit);
 
