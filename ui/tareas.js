@@ -24,7 +24,8 @@ export const crearCardTarea = (tarea) => {
 
     card.appendChild(crearFila('Título', tarea.titulo));
     card.appendChild(crearFila('Descripción', tarea.descripcion));
-
+    card.appendChild(crearFila('Fecha Registro', tarea.fechaRegistro));
+  
     const badgePrioridad = document.createElement('span');
     badgePrioridad.classList.add('priority-tag', tarea.prioridad.toLowerCase());
     badgePrioridad.textContent = tarea.prioridad.toUpperCase();
@@ -32,6 +33,8 @@ export const crearCardTarea = (tarea) => {
 
     card.appendChild(crearFila('Estado', tarea.estado));
 
+    card.appendChild(crearFila('Fecha', tarea.fechaRegistro));
+  
     const acciones = document.createElement('div');
     acciones.style.display = 'flex';
     acciones.style.gap = '10px';
@@ -43,5 +46,7 @@ export const crearCardTarea = (tarea) => {
     `;
 
     card.appendChild(acciones);
-    return card;
+      return card;
+  
+
 }
