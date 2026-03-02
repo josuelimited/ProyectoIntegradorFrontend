@@ -74,7 +74,7 @@ async function renderTareasUsuario(userId) {
 // --- Acciones: Eliminar y Editar ---
 async function processEliminar(id) {
     if (confirm("¿Estás seguro de eliminar esta tarea?")) {
-        const exito = await eliminarTarea(id);
+        const exito = await eliminarTarea(api_url, id);
         if (exito) {
             const card = tasksContainer.querySelector(`[data-id="${id}"]`);
             if (card) card.remove();
@@ -144,7 +144,7 @@ taskForm.addEventListener('submit', async (e) => {
     };
 
     if (isEditing) {
-        const ok = await editarTarea(editTaskId, taskData);
+        const ok = await editarTarea(api_url,editTaskId, taskData);
         if (ok) {
             limpiarTareas();
             await renderTareasUsuario(currentUser.id);
