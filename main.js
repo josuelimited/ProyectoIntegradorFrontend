@@ -147,8 +147,8 @@ function prepararEdicion(tareaCard) {
 
     document.getElementById('taskTitle').value = filas[0].textContent;
     document.getElementById('taskDesc').value = filas[1].textContent;
-    document.getElementById('taskPriority').value = filas[2].textContent.charAt(0).toUpperCase() + filas[2].textContent.slice(1).toLowerCase();
-    document.getElementById('taskStatus').value = filas[3].textContent;
+    document.getElementById('taskPriority').value = filas[3].textContent.charAt(0).toUpperCase() + filas[3].textContent.slice(1).toLowerCase();
+    document.getElementById('taskStatus').value = filas[4].textContent;
 
     document.querySelector('#taskSection .card__title').textContent = "Modificar Tarea";
     const btnText = document.querySelector('#taskForm .btn__text');
